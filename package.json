@@ -2,6 +2,10 @@
   "name": "@miracle-box/koishi-plugin-emerald-html2img",
   "description": "Provides API for converting HTML to image.",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miracle-box/koishi-plugin-emerald-html2img.git"
+  },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -9,14 +13,15 @@
     "dist"
   ],
   "license": "MIT",
-  "scripts": {},
   "keywords": [
     "chatbot",
     "koishi",
     "plugin"
   ],
-  "devDependencies": {},
   "peerDependencies": {
     "koishi": "^4.17.6"
+  },
+  "dependencies": {
+    "satori": "^0.10.13"
   }
 }
