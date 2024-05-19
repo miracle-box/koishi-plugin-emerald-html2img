@@ -1,7 +1,8 @@
 import { Context, Schema, Service } from "koishi";
 import satori, { SatoriOptions } from "satori";
-import fs from "node:fs";
+import { ResvgRenderOptions, renderAsync as resvg } from "@resvg/resvg-js";
 import React from "react";
+import fs from "node:fs";
 
 class HtmlToImage extends Service {
   static [Service.provide] = "html2img";
@@ -11,6 +12,12 @@ class HtmlToImage extends Service {
     height: 400,
     embedFont: true,
     fonts: [],
+  };
+
+  private defaultResvgOptions: ResvgRenderOptions = {
+    font: {
+      fontFiles: [],
+    },
   };
 
   constructor(ctx: Context, public config: HtmlToImage.Config) {
@@ -37,6 +44,11 @@ class HtmlToImage extends Service {
       style: font.style,
       lang: font.lang,
     }));
+
+    // Fill resvg font options
+    this.defaultResvgOptions.font.fontFiles = config.fonts.map(
+      (font) => font.path
+    );
   }
 
   private mergeSatoriOptions(options: Partial<SatoriOptions>): SatoriOptions {
@@ -48,11 +60,32 @@ class HtmlToImage extends Service {
     return { ...this.defaultSatoriOptions, ...options, fonts: mergedFonts };
   }
 
+  private mergeResvgOptions(
+    options: Partial<ResvgRenderOptions>
+  ): ResvgRenderOptions {
+    const mergedFonts = [
+      ...this.defaultResvgOptions.font.fontFiles,
+      ...(options?.font.fontFiles ?? []),
+    ];
+
+    const mergedOptions = { ...this.defaultResvgOptions, ...options };
+    mergedOptions.font.fontFiles = mergedFonts;
+
+    return mergedOptions;
+  }
+
   public async htmlToSvg(
     element: React.ReactNode,
     options?: Partial<SatoriOptions>
   ) {
     return satori(element, this.mergeSatoriOptions(options));
+  }
+
+  public async svgToPng(
+    svg: string | Buffer,
+    options?: Partial<ResvgRenderOptions>
+  ) {
+    return (await resvg(svg, this.mergeResvgOptions(options))).asPng();
   }
 }
 
