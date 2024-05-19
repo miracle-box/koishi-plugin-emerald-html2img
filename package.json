@@ -22,6 +22,7 @@
     "koishi": "^4.17.6"
   },
   "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "satori": "^0.10.13"
   }
 }
