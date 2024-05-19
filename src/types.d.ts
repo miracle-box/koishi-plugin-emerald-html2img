@@ -1,7 +1,7 @@
-import { HtmlToImage } from "./service";
+import { HtmlToImage } from ".";
 
 declare module "koishi" {
   interface Context {
-    html2img: HtmlToImage;
+    html2img: HtmlToImagex;
   }
 }
