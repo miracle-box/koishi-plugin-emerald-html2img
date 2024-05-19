@@ -9,11 +9,25 @@ class HtmlToImage extends Service {
   private defaultSatoriOptions: SatoriOptions = {
     width: 600,
     height: 400,
+    embedFont: true,
     fonts: [],
   };
 
   constructor(ctx: Context, public config: HtmlToImage.Config) {
+    // Check fonts for existence
+    for (const font of config.fonts) {
+      const fileExists = fs.existsSync(font.path);
+
+      if (!fileExists) {
+        throw new Error(
+          `File for font "${font.name}" is not found at ${font.path}`
+        );
+      }
+    }
+
+    // Register service
     super(ctx, "html2img");
+    ctx.logger.info("HTML to image service started.");
 
     // Fill satori font options
     this.defaultSatoriOptions.fonts = config.fonts.map((font) => ({
@@ -25,30 +39,18 @@ class HtmlToImage extends Service {
     }));
   }
 
-  async start() {
-    // Check config
-    for (const font of this.config.fonts) {
-      const fileExists = await fs.existsSync(font.path);
-
-      if (!fileExists) {
-        throw new Error(
-          `File for font "${font.name}" is not found at ${font.path}`
-        );
-      }
-    }
-
-    this.ctx.logger.info("HTML to image service started.");
-  }
-
   private mergeSatoriOptions(options: Partial<SatoriOptions>): SatoriOptions {
-    const mergedFonts = [...this.defaultSatoriOptions.fonts, ...options.fonts];
+    const mergedFonts = [
+      ...this.defaultSatoriOptions.fonts,
+      ...(options?.fonts ?? []),
+    ];
 
     return { ...this.defaultSatoriOptions, ...options, fonts: mergedFonts };
   }
 
   public async htmlToSvg(
     element: React.ReactNode,
-    options: Partial<SatoriOptions>
+    options?: Partial<SatoriOptions>
   ) {
     return satori(element, this.mergeSatoriOptions(options));
   }
