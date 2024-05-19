@@ -1,7 +1,7 @@
 {
   "name": "@miracle-box/koishi-plugin-emerald-html2img",
   "description": "Provides API for converting HTML to image.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/miracle-box/koishi-plugin-emerald-html2img.git"
