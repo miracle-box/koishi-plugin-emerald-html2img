@@ -81,11 +81,21 @@ class HtmlToImage extends Service {
     return satori(element, this.mergeSatoriOptions(options));
   }
 
-  public async svgToPng(
+  public async svgToImage(
     svg: string | Buffer,
     options?: Partial<ResvgRenderOptions>
   ) {
-    return (await resvg(svg, this.mergeResvgOptions(options))).asPng();
+    return resvg(svg, this.mergeResvgOptions(options));
+  }
+
+  public async htmlToImage(
+    element: React.ReactNode,
+    satoriOptions?: Partial<SatoriOptions>,
+    resvgOptions?: Partial<ResvgRenderOptions>
+  ) {
+    const svg = await this.htmlToSvg(element, satoriOptions);
+
+    return this.svgToImage(svg, resvgOptions);
   }
 }
 
