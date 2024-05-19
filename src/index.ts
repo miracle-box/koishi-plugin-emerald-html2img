@@ -146,4 +146,11 @@ namespace HtmlToImage {
     ).required(),
   });
 }
+
 export default HtmlToImage;
+
+declare module "koishi" {
+  interface Context {
+    html2img: HtmlToImage;
+  }
+}
