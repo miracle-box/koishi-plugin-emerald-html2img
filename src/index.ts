@@ -3,14 +3,12 @@ import satori, { SatoriOptions } from "satori";
 import { ResvgRenderOptions, renderAsync as resvg } from "@resvg/resvg-js";
 import React from "react";
 import fs from "node:fs";
+import { DefaultSatoriOptions, OverrideSatoriOptions } from "./types";
 
 class HtmlToImage extends Service {
   static [Service.provide] = "html2img";
 
-  private defaultSatoriOptions: SatoriOptions = {
-    width: 600,
-    height: 400,
-    embedFont: true,
+  private defaultSatoriOptions: DefaultSatoriOptions = {
     fonts: [],
   };
 
@@ -51,7 +49,7 @@ class HtmlToImage extends Service {
     );
   }
 
-  private mergeSatoriOptions(options: Partial<SatoriOptions>): SatoriOptions {
+  private mergeSatoriOptions(options: OverrideSatoriOptions): SatoriOptions {
     const mergedFonts = [
       ...this.defaultSatoriOptions.fonts,
       ...(options?.fonts ?? []),
@@ -76,7 +74,7 @@ class HtmlToImage extends Service {
 
   public async htmlToSvg(
     element: React.ReactNode,
-    options?: Partial<SatoriOptions>
+    options?: OverrideSatoriOptions
   ) {
     return satori(element, this.mergeSatoriOptions(options));
   }
@@ -90,7 +88,7 @@ class HtmlToImage extends Service {
 
   public async htmlToImage(
     element: React.ReactNode,
-    satoriOptions?: Partial<SatoriOptions>,
+    satoriOptions?: OverrideSatoriOptions,
     resvgOptions?: Partial<ResvgRenderOptions>
   ) {
     const svg = await this.htmlToSvg(element, satoriOptions);
