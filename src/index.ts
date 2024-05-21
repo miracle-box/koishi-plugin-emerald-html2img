@@ -62,10 +62,15 @@ class HtmlToImage extends Service {
       ...(options?.font.fontFiles ?? []),
     ];
 
-    const mergedOptions = { ...this.defaultResvgOptions, ...options };
-    mergedOptions.font.fontFiles = mergedFonts;
-
-    return mergedOptions;
+    return {
+      ...this.defaultResvgOptions,
+      ...options,
+      font: {
+        ...this.defaultResvgOptions.font,
+        ...options.font,
+        fontFiles: mergedFonts,
+      },
+    };
   }
 
   public async htmlToSvg(
