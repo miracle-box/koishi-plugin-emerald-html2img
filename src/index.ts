@@ -9,15 +9,9 @@ import { HtmlToImageConfig } from "./config";
 class HtmlToImage extends Service {
   static [Service.provide] = "html2img";
 
-  private defaultSatoriOptions: DefaultSatoriOptions = {
-    fonts: [],
-  };
+  private defaultSatoriOptions: DefaultSatoriOptions;
 
-  private defaultResvgOptions: ResvgRenderOptions = {
-    font: {
-      fontFiles: [],
-    },
-  };
+  private defaultResvgOptions: ResvgRenderOptions;
 
   constructor(ctx: Context, public config: HtmlToImageConfig) {
     // Check fonts for existence
@@ -35,18 +29,19 @@ class HtmlToImage extends Service {
     super(ctx, "html2img");
     ctx.logger.info("HTML to image service started.");
 
-    // Fill satori font options
-    this.defaultSatoriOptions.fonts = config.fonts.map((font) => ({
-      data: fs.readFileSync(font.path),
-      name: font.name,
-      weight: font.weight,
-      style: font.style,
-      lang: font.lang,
-    }));
+    // Fill satori options
+    this.defaultSatoriOptions = {
+      ...config.satori,
+      fonts: config.fonts.map((font) => ({
+        ...font,
+        data: fs.readFileSync(font.path),
+      })),
+    };
 
-    // Fill resvg font options
+    // Fill resvg options
+    this.defaultResvgOptions = config.resvg;
     this.defaultResvgOptions.font.fontFiles = config.fonts.map(
-      (font) => font.path
+      ({ path }) => path
     );
   }
 
