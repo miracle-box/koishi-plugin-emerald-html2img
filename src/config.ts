@@ -104,45 +104,30 @@ export const HtmlToImageConfig: Schema<HtmlToImageConfig> = Schema.object({
       Schema.const(1).description("crispEdges"),
       Schema.const(2).description("geometricPrecision"),
     ])
-      .default(1)
+      .default(2)
       .description("形状渲染质量"),
     textRendering: Schema.union([
       Schema.const(0).description("optimizeSpeed"),
       Schema.const(1).description("optimizeLegibility"),
       Schema.const(2).description("geometricPrecision"),
     ])
-      .default(1)
+      .default(2)
       .description("文字渲染质量"),
     imageRendering: Schema.union([
       Schema.const(0).description("optimizeQuality"),
       Schema.const(1).description("optimizeSpeed"),
     ])
-      .default(1)
+      .default(0)
       .description("图像渲染质量"),
-    fitTo: Schema.union([
-      Schema.object({
-        mode: Schema.const("original").required(),
-      }).description("保持原图大小"),
-      Schema.object({
-        mode: Schema.const("width").required(),
-        value: Schema.number()
-          .required()
-          .default(480)
-          .description("固定宽度值"),
-      }).description("固定宽度"),
-
-      Schema.object({
-        mode: Schema.const("height").required(),
-        value: Schema.number()
-          .required()
-          .default(240)
-          .description("固定高度值"),
-      }).description("固定高度"),
-      Schema.object({
-        mode: Schema.const("zoom").required(),
-        value: Schema.number().required().default(1.25).description("缩放倍数"),
-      }).description("按倍数缩放"),
-    ]).description("缩放模式"),
+    fitTo: Schema.object({
+      mode: Schema.union([
+        Schema.const("original").description("按原图"),
+        Schema.const("width").description("固定宽度"),
+        Schema.const("height").description("固定高度"),
+        Schema.const("zoom").description("按比例缩放"),
+      ]).default("zoom"),
+      value: Schema.number().default(2).description("缩放值 (宽度/高度/倍数)"),
+    }).description("缩放模式"),
     logLevel: Schema.union([
       Schema.const("off"),
       Schema.const("error"),

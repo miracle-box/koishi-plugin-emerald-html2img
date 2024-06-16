@@ -59,7 +59,7 @@ class HtmlToImage extends Service {
   ): ResvgRenderOptions {
     const mergedFonts = [
       ...this.defaultResvgOptions.font.fontFiles,
-      ...(options?.font.fontFiles ?? []),
+      ...(options?.font?.fontFiles ?? []),
     ];
 
     return {
@@ -67,7 +67,7 @@ class HtmlToImage extends Service {
       ...options,
       font: {
         ...this.defaultResvgOptions.font,
-        ...options.font,
+        ...options?.font,
         fontFiles: mergedFonts,
       },
     };
