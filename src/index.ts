@@ -7,6 +7,8 @@ import { DefaultSatoriOptions, OverrideSatoriOptions } from "./types";
 import { HtmlToImageConfig } from "./config";
 
 class HtmlToImage extends Service {
+  name = "emerald-html2img";
+
   static [Service.provide] = "html2img";
 
   private defaultSatoriOptions: DefaultSatoriOptions;
@@ -99,7 +101,6 @@ class HtmlToImage extends Service {
 }
 
 namespace HtmlToImage {
-  export const name = "emerald-html2img";
   export const filter = false;
   export const Config = HtmlToImageConfig;
 }
